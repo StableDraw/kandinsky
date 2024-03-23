@@ -16,7 +16,6 @@ alt-profanity-check>=1.0.1
 altair>=5.0.1
 antlr4-python3-runtime>=4.9.3
 anyio>=3.5.0
-apex>=0.1
 appdirs>=1.4.4
 argon2-cffi>=21.3.0
 argon2-cffi-bindings>=21.2.0
