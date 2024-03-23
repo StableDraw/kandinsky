@@ -303,7 +303,6 @@ starlette>=0.17.1
 stevedore>=3.5.0
 table-logger>=0.3.6
 tabulate>=0.8.9
-taichi>=1.6.0
 tblib>=1.7.0
 tensorboard>=2.11.2
 tensorboard-data-server>=0.6.1
