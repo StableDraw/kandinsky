@@ -364,7 +364,6 @@ scikit-image
 matplotlib
 wandb
 albumentations
-bezier
 scipy
 Pillow
 huggingface_hub
