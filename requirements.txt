@@ -94,7 +94,6 @@ fairscale>=0.4.6
 fairseq>=0.12.2
 fastapi>=0.72.0
 fastBPE>=0.1.0
-fasttext>=0.9.2
 fasttext-langdetect>=1.0.5
 ffmpy>=0.3.1
 filelock
