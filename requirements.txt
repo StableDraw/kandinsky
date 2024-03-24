@@ -15,7 +15,6 @@ scikit-image
 matplotlib
 wandb
 albumentations
-bezier
 scipy
 Pillow
 tqdm
