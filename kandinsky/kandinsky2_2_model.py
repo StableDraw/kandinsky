@@ -9,46 +9,49 @@ from transformers import CLIPVisionModelWithProjection, pipeline
 from diffusers.models import UNet2DConditionModel
 
 class Kandinsky2_2:
-    def __init__(self, device, task_type = "text2img", cache_dir = "weights\\2_2", torch_dtype = torch.float16):
+    def __init__(self, device, task_type = "text2img", cache_dir = "weights\\2_2", torch_dtype = torch.float16, from_local = False):
         self.device = device
         self.task_type = task_type
-        self.image_encoder = CLIPVisionModelWithProjection.from_pretrained("kandinsky-community/kandinsky-2-2-prior", subfolder = "image_encoder", cache_dir = cache_dir).to(torch_dtype).to(self.device)
+        org_id = "kandinsky-community/"
+        if from_local == True:
+            org_id = ".\\" + cache_dir + "\\"
+        self.image_encoder = CLIPVisionModelWithProjection.from_pretrained(pretrained_model_name_or_path = org_id + "kandinsky-2-2-prior", subfolder = "image_encoder", cache_dir = cache_dir, use_safetensors = True).to(torch_dtype).to(self.device)
         if task_type == "text2img":
-            self.unet = UNet2DConditionModel.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", subfolder = "unet", cache_dir = cache_dir).to(torch_dtype).to(self.device)
-            self.prior = KandinskyV22PriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype)
+            self.unet = UNet2DConditionModel.from_pretrained(org_id + "kandinsky-2-2-decoder", subfolder = "unet", cache_dir = cache_dir, use_safetensors = True).to(torch_dtype).to(self.device)
+            self.prior = KandinskyV22PriorPipeline.from_pretrained(org_id + "kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype)
             self.prior = self.prior.to(self.device)
-            self.decoder = KandinskyV22Pipeline.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", unet = self.unet, torch_dtype = torch_dtype)
+            self.decoder = KandinskyV22Pipeline.from_pretrained(org_id + "kandinsky-2-2-decoder", unet = self.unet, torch_dtype = torch_dtype)
             self.decoder = self.decoder.to(self.device)
         elif task_type == "text2imgCN":
-            self.unet = UNet2DConditionModel.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", subfolder = "unet", cache_dir = cache_dir).to(torch_dtype).to(self.device)
-            self.prior = KandinskyV22PriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype)
+            self.unet = UNet2DConditionModel.from_pretrained(org_id + "kandinsky-2-2-decoder", subfolder = "unet", cache_dir = cache_dir, use_safetensors = True).to(torch_dtype).to(self.device)
+            self.prior = KandinskyV22PriorPipeline.from_pretrained(org_id + "kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype)
             self.prior = self.prior.to(self.device)
-            self.decoder = KandinskyV22ControlnetPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-controlnet-depth", unet = self.unet, torch_dtype = torch_dtype, cache_dir = cache_dir)
+            self.decoder = KandinskyV22ControlnetPipeline.from_pretrained(org_id + "kandinsky-2-2-controlnet-depth", unet = self.unet, torch_dtype = torch_dtype, cache_dir = cache_dir, use_safetensors = True)
             self.decoder = self.decoder.to(self.device)
         elif task_type == "inpainting":
-            self.unet = UNet2DConditionModel.from_pretrained("kandinsky-community/kandinsky-2-2-decoder-inpaint", subfolder = "unet", cache_dir = cache_dir).to(torch_dtype).to(self.device)
-            self.prior = KandinskyV22PriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype, cache_dir = cache_dir)
+            self.unet = UNet2DConditionModel.from_pretrained(org_id + "kandinsky-2-2-decoder-inpaint", subfolder = "unet", cache_dir = cache_dir, use_safetensors = True).to(torch_dtype).to(self.device)
+            self.prior = KandinskyV22PriorPipeline.from_pretrained(org_id + "kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype, cache_dir = cache_dir, use_safetensors = True)
             self.prior = self.prior.to(self.device)
-            self.decoder = KandinskyV22InpaintPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-decoder-inpaint", unet = self.unet, torch_dtype = torch_dtype, cache_dir = cache_dir)
+            self.decoder = KandinskyV22InpaintPipeline.from_pretrained(org_id + "kandinsky-2-2-decoder-inpaint", unet = self.unet, torch_dtype = torch_dtype, cache_dir = cache_dir, use_safetensors = True)
             self.decoder = self.decoder.to(self.device)
         elif task_type == "img2img":
-            self.unet = UNet2DConditionModel.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", subfolder = "unet", cache_dir = cache_dir).to(torch_dtype).to(self.device)
-            self.prior = KandinskyV22PriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype, cache_dir = cache_dir)
+            self.unet = UNet2DConditionModel.from_pretrained(org_id + "kandinsky-2-2-decoder", subfolder = "unet", cache_dir = cache_dir, use_safetensors = True).to(torch_dtype).to(self.device)
+            self.prior = KandinskyV22PriorPipeline.from_pretrained(org_id + "kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype, cache_dir = cache_dir, use_safetensors = True)
             self.prior = self.prior.to(self.device)
-            self.decoder = KandinskyV22Img2ImgPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-decoder", unet = self.unet, torch_dtype = torch_dtype, cache_dir = cache_dir)
+            self.decoder = KandinskyV22Img2ImgPipeline.from_pretrained(org_id + "kandinsky-2-2-decoder", unet = self.unet, torch_dtype = torch_dtype, cache_dir = cache_dir, use_safetensors = True)
             self.decoder = self.decoder.to(self.device)
         elif task_type == "img2imgCN":
-            self.prior = KandinskyV22PriorEmb2EmbPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype, cache_dir = cache_dir)
+            self.prior = KandinskyV22PriorEmb2EmbPipeline.from_pretrained(org_id + "kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype, cache_dir = cache_dir, use_safetensors = True)
             self.prior = self.prior.to(self.device)
-            self.decoder = KandinskyV22ControlnetImg2ImgPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-controlnet-depth", torch_dtype = torch_dtype, cache_dir = cache_dir)
+            self.decoder = KandinskyV22ControlnetImg2ImgPipeline.from_pretrained(org_id + "kandinsky-2-2-controlnet-depth", torch_dtype = torch_dtype, cache_dir = cache_dir, use_safetensors = True)
             self.decoder = self.decoder.to(self.device)
         elif task_type == "depth2img":
-            self.prior = KandinskyV22PriorPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype, cache_dir = cache_dir)
+            self.prior = KandinskyV22PriorPipeline.from_pretrained(org_id + "kandinsky-2-2-prior", image_encoder = self.image_encoder, torch_dtype = torch_dtype, cache_dir = cache_dir, use_safetensors = True)
             self.prior = self.prior.to(self.device)
-            self.decoder = KandinskyV22ControlnetPipeline.from_pretrained("kandinsky-community/kandinsky-2-2-controlnet-depth", torch_dtype = torch_dtype, cache_dir = cache_dir)
+            self.decoder = KandinskyV22ControlnetPipeline.from_pretrained(org_id + "kandinsky-2-2-controlnet-depth", torch_dtype = torch_dtype, cache_dir = cache_dir, use_safetensors = True)
             self.decoder = self.decoder.to(self.device)
         else:
-            raise ValueError("Only text2img, img2img, inpainting, depth2img is available")
+            raise ValueError("Only text2img, img2img, inpainting, img2imgCN and depth2img is available")
             
     def get_new_h_w(self, h, w):
         new_h = h // 64
